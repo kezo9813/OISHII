@@ -1,0 +1,12 @@
+node_modules
+.pnpm-store
+.next
+out
+.env*
+*.log
+.DS_Store
+coverage
+playwright-report
+.prisma
+.contentlayer
+.husky/_
