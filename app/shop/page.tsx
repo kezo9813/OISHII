@@ -188,7 +188,9 @@ export default function ShopPage() {
                 <select
                   id="frequency"
                   value={frequency}
-                  onChange={(event) => setFrequency(event.target.value)}
+                  onChange={(event) =>
+                    setFrequency(event.target.value as (typeof FREQUENCIES)[number]["value"])
+                  }
                 >
                   {FREQUENCIES.map((option) => (
                     <option key={option.value} value={option.value}>
