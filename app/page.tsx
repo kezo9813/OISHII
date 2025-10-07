@@ -1,4 +1,10 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const BottleCanvas = dynamic(() => import("../components/bottle/BottleCanvas"), {
+  ssr: false,
+  loading: () => <div className="hero-visual" aria-hidden="true" />
+});
 
 export default function HomePage() {
   return (
@@ -14,7 +20,7 @@ export default function HomePage() {
             Placeholder CTA
           </Link>
         </div>
-        <div className="placeholder-visual">Hero Visual</div>
+        <BottleCanvas />
       </section>
 
       <section>
