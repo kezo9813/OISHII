@@ -214,7 +214,7 @@ export default function BottleCanvas() {
 
     const handleExport = () => {
       exporter.parse(
-        bottle,
+        scene,
         (result) => {
           const blob = new Blob([result as ArrayBuffer], {
             type: "model/gltf-binary"
@@ -226,7 +226,7 @@ export default function BottleCanvas() {
           link.click();
           setTimeout(() => URL.revokeObjectURL(url), 0);
         },
-        { binary: true, onlyVisible: true }
+        { binary: true, onlyVisible: true } as any
       );
     };
 
