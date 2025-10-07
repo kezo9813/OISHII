@@ -9,74 +9,106 @@ const BottleCanvas = dynamic(() => import("../components/bottle/BottleCanvas"), 
 export default function HomePage() {
   return (
     <>
-      <section className="hero">
+      <section className="hero hero-home">
         <div className="hero-copy">
-          <p className="section-heading">Modern yakiniku sauce</p>
-          <h1>White heat. Pure umami.</h1>
+          <p className="eyebrow">Japanese Barbecue Sauce</p>
+          <h1>Charred. Glazed. Legendary.</h1>
           <p className="lead">
-            Placeholder storytelling for a limited sauce crafted in small batches. Imagine billowing steam, lacquered grill marks, and a bottle that belongs on a minimalist table.
+            OISHII coats sizzling short ribs and smoky mushrooms with a lacquered sheen, fusing umami depth, bright citrus, and a slow-building heat.
           </p>
           <Link href="/shop" className="primary-action">
-            Placeholder CTA
+            Shop Now
           </Link>
+          <div className="hero-badges" aria-label="Product accolades">
+            <span>Batch No. 07 · Brewed weekly</span>
+            <span>★ 4.9 (2,680 reviews)</span>
+          </div>
         </div>
         <BottleCanvas />
       </section>
 
-      <section>
-        <p className="section-heading">What to expect</p>
+      <section className="home-highlights">
         <div className="grid">
-          <h2 className="section-title">Culture meets precision</h2>
-          <p className="lead">
-            Use this space to hint at sourcing transparency, seasonal batches, and the convivial moments the sauce is built for. Keep copy sharp, visual, and aspirational.
-          </p>
+          <div className="headline-block">
+            <p className="section-heading">Why it hits different</p>
+            <h2 className="section-title">Culture-forward flavor engineered for the modern table</h2>
+            <p className="lead">
+              We cold-age tamari, mirin, and charred garlic before finishing with yuzu zest for an edge that plays well with smoky grills and late-night noodles.
+            </p>
+          </div>
+          <ul className="highlight-list">
+            {["Triple-fermented soy for velvet umami", "Toasted sesame and ginger aromatics", "Slow-cooked sweetness with a clean burn"].map((item) => (
+              <li key={item} className="highlight-item">
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      <section>
-        <div className="product-grid">
+      <section className="usage-section">
+        <p className="section-heading">How to use</p>
+        <div className="usage-grid">
           {[
             {
               title: "Marinade",
-              note: "Let the bottle suggest glossy steaks and smoky vegetables.",
-              prompt: "Add a short line about heat meeting sweetness."
+              description: "Brush over ribeye and shiitake before a high-heat sear for a lacquered crust and gentle caramel smoke."
             },
             {
-              title: "Topping",
-              note: "Placeholder for that final lacquer across rice, noodles, or tofu.",
-              prompt: "Mention the umami snap in three or four words."
+              title: "Finish",
+              description: "Drizzle on sizzling yakitori, ramen, or crispy tofu to add a glossy, umami-rich pop right before plating."
             },
             {
               title: "Dip",
-              note: "A reminder that yakiniku rituals are social and generous.",
-              prompt: "Invite guests to reach for the bottle first."
+              description: "Serve alongside gyoza, fries, or karaage. Stir in chili crunch or citrus for quick customizations."
             }
           ].map((item) => (
-            <article className="product-card" key={item.title}>
-              <h3 className="card-title">{item.title}</h3>
-              <p>{item.note}</p>
-              <p className="card-meta">{item.prompt}</p>
+            <article className="usage-card" key={item.title}>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
             </article>
           ))}
         </div>
       </section>
 
-      <section>
-        <p className="section-heading">Journal teaser</p>
-        <div className="grid">
-          <h2 className="section-title">Stories around the grill</h2>
+      <section className="recipes-preview">
+        <div className="recipes-preview__intro">
+          <p className="section-heading">Recipes</p>
+          <h2 className="section-title">From weekday noodles to smoke-filled weekends</h2>
           <p className="lead">
-            Reserve room for chef interviews, quick recipes, and cultural dispatches inspired by yakiniku nights. Everything here is placeholder copy so you can write with confidence later.
+            Browse chef-tested recipes that spotlight OISHII in stir-fries, grilled classics, and bold snacks. Each one is tuned for quick execution and maximum gloss.
           </p>
-          <div className="product-card">
-            <h3 className="card-title">Upcoming article slot</h3>
-            <p>
-              Imagine a macro shot of a glistening skewer, a splash of bright red accent, and sharp typography. Link readers toward the shop after they finish the story.
-            </p>
-            <Link href="/shop" className="subtle-link">
-              Placeholder link →
-            </Link>
-          </div>
+          <Link href="/recipes" className="subtle-link">
+            Explore all recipes →
+          </Link>
+        </div>
+        <div className="recipes-preview__grid">
+          {[
+            {
+              title: "Charred Short Rib Lettuce Cups",
+              meta: "Prep 15 · Cook 20",
+              href: "/recipes/charred-short-rib"
+            },
+            {
+              title: "Midnight Yaki Udon",
+              meta: "Prep 10 · Cook 12",
+              href: "/recipes/midnight-yaki-udon"
+            },
+            {
+              title: "Crispy Rice with Glazed Salmon",
+              meta: "Prep 20 · Cook 18",
+              href: "/recipes/crispy-rice-salmon"
+            }
+          ].map((recipe) => (
+            <article key={recipe.title} className="recipe-card">
+              <div className="recipe-card__media" aria-hidden="true" />
+              <h3>{recipe.title}</h3>
+              <p>{recipe.meta}</p>
+              <Link href={recipe.href} className="subtle-link">
+                Get recipe →
+              </Link>
+            </article>
+          ))}
         </div>
       </section>
     </>

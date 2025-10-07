@@ -6,10 +6,15 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 const navigation = [
-  { href: "/", label: "Home" },
   { href: "/shop", label: "Shop" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" }
+  { href: "/recipes", label: "Recipes" },
+  { href: "/about", label: "About" }
+];
+
+const utilityLinks = [
+  { href: "/store-locator", label: "Find a Store" },
+  { href: "/sign-in", label: "Sign In" },
+  { href: "/cart", label: "Cart" }
 ];
 
 export const metadata: Metadata = {
@@ -29,22 +34,39 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header>
-          <div className="site-shell">
-            <nav>
-              <Link href="/" className="brand-mark">
-                OISHII
-              </Link>
-              <ul>
-                {navigation.map((item) => (
-                  <li key={item.href}>
-                    <Link href={item.href}>{item.label}</Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+        <div className="site-topbar">
+          <div className="announcement-bar" role="status">
+            <div className="site-shell announcement-content">
+              <span>Free shipping on orders over $35.</span>
+              <Link href="/shop">Shop the latest drop →</Link>
+            </div>
           </div>
-        </header>
+          <header className="site-header">
+            <div className="site-shell">
+              <div className="nav-row">
+                <Link href="/" className="brand-mark" aria-label="OISHII home">
+                  OISHII
+                </Link>
+                <nav aria-label="Primary">
+                  <ul className="nav-links">
+                    {navigation.map((item) => (
+                      <li key={item.href}>
+                        <Link href={item.href}>{item.label}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+                <div className="nav-utility" aria-label="Utility">
+                  {utilityLinks.map((item) => (
+                    <Link key={item.href} href={item.href}>
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </header>
+        </div>
         <main>
           <div className="site-shell">{children}</div>
         </main>
