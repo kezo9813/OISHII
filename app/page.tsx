@@ -1,10 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
-
-const BottleCanvas = dynamic(() => import("../components/bottle/BottleCanvas"), {
-  ssr: false,
-  loading: () => <div className="hero-visual" aria-hidden="true" />
-});
 
 export default function HomePage() {
   return (
@@ -24,7 +19,16 @@ export default function HomePage() {
             <span>★ 4.9 (2,680 reviews)</span>
           </div>
         </div>
-        <BottleCanvas />
+        <div className="hero-visual hero-visual--image">
+          <Image
+            src="/images/hero-steak.jpg"
+            alt="Japanese barbecue sauce drizzled over a grilled steak"
+            fill
+            priority
+            sizes="(min-width: 1024px) 420px, (min-width: 720px) 60vw, 80vw"
+            className="hero-visual__image"
+          />
+        </div>
       </section>
 
       <section className="home-highlights">

@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
+import Image from "next/image";
 
 function buildLabelTexture(renderer: THREE.WebGLRenderer) {
   const width = 1024;
@@ -264,11 +265,15 @@ export default function BottleCanvas() {
   }, []);
 
   return (
-    <div ref={containerRef} className="hero-visual">
-      <canvas ref={canvasRef} aria-hidden="true" />
-      <button ref={exportRef} type="button" className="hero-export">
-        Export .glb
-      </button>
+    <div className="bottle-image-wrapper">
+      <Image
+        src="/images/hero-steak.jpg"
+        alt="OISHII sauce being poured on marbled steak"
+        width={768}
+        height={768}
+        priority
+        className="bottle-image"
+      />
     </div>
   );
 }
