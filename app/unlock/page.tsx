@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { UnlockForm } from "./UnlockForm";
 
 export const metadata: Metadata = {
-  title: "Accès sécurisé — OISHII",
-  description: "Entrez le mot de passe pour accéder au site OISHII."
+  title: "Accès sécurisé — OIISHI",
+  description: "Entrez le mot de passe pour accéder au site OIISHI."
 };
 
 type UnlockPageProps = {
@@ -23,7 +23,7 @@ export default function UnlockPage({ searchParams }: UnlockPageProps) {
           Ce site est protégé par mot de passe
         </h1>
         <p className="lead">
-          Merci d&apos;entrer le mot de passe fourni pour accéder à l&apos;expérience complète OISHII.
+          Merci d&apos;entrer le mot de passe fourni pour accéder à l&apos;expérience complète OIISHI.
         </p>
         <UnlockForm redirectTo={safeRedirect} />
         <p className="unlock-help">Indice&nbsp;: pensez à votre bol préféré.</p>

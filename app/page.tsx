@@ -1,5 +1,37 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://oishii.site";
+
+export const metadata: Metadata = {
+  title: "OIISHI | Charred. Glazed. Legendary.",
+  description:
+    "Small-batch Japanese barbecue sauce engineered for high-gloss grilling, midnight noodles, and everything in between.",
+  alternates: { canonical: `${siteUrl}/` },
+  openGraph: {
+    title: "OIISHI — Japanese Barbecue Sauce",
+    description:
+      "Discover a chef-built tare brewed for lacquered gloss, umami depth, and a clean citrus snap.",
+    url: `${siteUrl}/`,
+    siteName: "OIISHI",
+    images: [
+      {
+        url: `${siteUrl}/images/hero-steak.jpg`,
+        width: 1200,
+        height: 900,
+        alt: "OIISHI sauce drizzled over a charred steak"
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "OIISHI — Charred. Glazed. Legendary.",
+    description:
+      "Japanese barbecue sauce crafted for obsessive gloss and smoke.",
+    images: [`${siteUrl}/images/hero-steak.jpg`]
+  }
+};
 
 export default function HomePage() {
   return (
@@ -9,14 +41,20 @@ export default function HomePage() {
           <p className="eyebrow">Japanese Barbecue Sauce</p>
           <h1>Charred. Glazed. Legendary.</h1>
           <p className="lead">
-            OISHII coats sizzling short ribs and smoky mushrooms with a lacquered sheen, fusing umami depth, bright citrus, and a slow-building heat.
+            OIISHI coats sizzling short ribs and smoky mushrooms with a lacquered sheen, fusing umami depth, bright citrus, and a slow-building heat.
           </p>
-          <Link href="/shop" className="primary-action">
-            Shop Now
-          </Link>
+          <div className="hero-cta-group">
+            <Link href="/shop" className="primary-action">
+              Shop Now
+            </Link>
+            <Link href="#why-oishii" className="secondary-link hero-secondary">
+              Why it hits different →
+            </Link>
+          </div>
           <div className="hero-badges" aria-label="Product accolades">
             <span>Batch No. 07 · Brewed weekly</span>
             <span>★ 4.9 (2,680 reviews)</span>
+            <span>Only 127 bottles left in this drop</span>
           </div>
         </div>
         <div className="hero-visual hero-visual--image">
@@ -31,7 +69,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="home-highlights">
+      <section className="home-highlights" id="why-oishii">
         <div className="grid">
           <div className="headline-block">
             <p className="section-heading">Why it hits different</p>
@@ -39,6 +77,9 @@ export default function HomePage() {
             <p className="lead">
               We cold-age tamari, mirin, and charred garlic before finishing with yuzu zest for an edge that plays well with smoky grills and late-night noodles.
             </p>
+            <Link href="/about" className="primary-action primary-action--outline">
+              What&apos;s inside
+            </Link>
           </div>
           <ul className="highlight-list">
             {["Triple-fermented soy for velvet umami", "Toasted sesame and ginger aromatics", "Slow-cooked sweetness with a clean burn"].map((item) => (
@@ -56,23 +97,49 @@ export default function HomePage() {
           {[
             {
               title: "Marinade",
-              description: "Brush over ribeye and shiitake before a high-heat sear for a lacquered crust and gentle caramel smoke."
+              description: "Brush over ribeye and shiitake before a high-heat sear for a lacquered crust and gentle caramel smoke.",
+              href: "/recipes?use=marinade"
             },
             {
               title: "Finish",
-              description: "Drizzle on sizzling yakitori, ramen, or crispy tofu to add a glossy, umami-rich pop right before plating."
+              description: "Drizzle on sizzling yakitori, ramen, or crispy tofu to add a glossy, umami-rich pop right before plating.",
+              href: "/recipes?use=finish"
             },
             {
               title: "Dip",
-              description: "Serve alongside gyoza, fries, or karaage. Stir in chili crunch or citrus for quick customizations."
+              description: "Serve alongside gyoza, fries, or karaage. Stir in chili crunch or citrus for quick customizations.",
+              href: "/recipes?use=dip"
             }
           ].map((item) => (
-            <article className="usage-card" key={item.title}>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-            </article>
+            <Link className="usage-card" key={item.title} href={item.href}>
+              <div>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </div>
+              <span className="usage-card__cta">Explore recipes →</span>
+            </Link>
           ))}
         </div>
+      </section>
+
+      <section className="home-midcta">
+        {[{
+          title: "What makes OIISHI obsessive",
+          copy: "Cold-aged tamari, toasted sesame oil, and yuzu flash—decoded for the curious eater.",
+          href: "/about"
+        }, {
+          title: "Meet the next batch",
+          copy: "Peek behind the bottling line, see the schedule, and reserve your allocation before it sells out.",
+          href: "/shop"
+        }].map((card) => (
+          <article key={card.title} className="midcta-card">
+            <h3>{card.title}</h3>
+            <p>{card.copy}</p>
+            <Link href={card.href} className="secondary-link">
+              Learn more →
+            </Link>
+          </article>
+        ))}
       </section>
 
       <section className="recipes-preview">
@@ -80,7 +147,7 @@ export default function HomePage() {
           <p className="section-heading">Recipes</p>
           <h2 className="section-title">From weekday noodles to smoke-filled weekends</h2>
           <p className="lead">
-            Browse chef-tested recipes that spotlight OISHII in stir-fries, grilled classics, and bold snacks. Each one is tuned for quick execution and maximum gloss.
+            Browse chef-tested recipes that spotlight OIISHI in stir-fries, grilled classics, and bold snacks. Each one is tuned for quick execution and maximum gloss.
           </p>
           <Link href="/recipes" className="subtle-link">
             Explore all recipes →

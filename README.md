@@ -1,4 +1,4 @@
-# OISHII
+# OIISHI
 
 Minimal Next.js site scaffolded for a luxury sauce concept.
 
