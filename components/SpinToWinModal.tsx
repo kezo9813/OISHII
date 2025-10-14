@@ -71,7 +71,7 @@ export function SpinToWinModal() {
 
   return (
     <div className="spin-modal" role="dialog" aria-modal="true" aria-label="Spin to win a discount">
-      <div className="spin-modal__card">
+      <div className="spin-modal__card" role="presentation">
         <button type="button" className="spin-modal__close" onClick={handleClose} aria-label="Close">
           ×
         </button>

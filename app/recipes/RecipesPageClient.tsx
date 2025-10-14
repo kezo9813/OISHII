@@ -46,7 +46,10 @@ const getInitialFilters = (): FilterState => {
   };
 };
 
-const useOptions = Array.from(new Set(recipes.flatMap((recipe) => recipe.uses))).map(optionify);
+const useOptions = Array.from(new Set(recipes.flatMap((recipe) => recipe.uses))).map((use) => ({
+  value: use,
+  label: toTitle(use)
+}));
 const pairOptions = Array.from(new Set(recipes.flatMap((recipe) => recipe.pairs))).map(optionify);
 const tagOptions = Array.from(new Set(recipes.flatMap((recipe) => recipe.tags))).map((tag) => ({
   value: tag,
@@ -85,13 +88,17 @@ function matchesFilterValue(value: FilterValue, target: string | string[] | unde
 export default function RecipesPageClient({ siteUrl }: { siteUrl: string }) {
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [sharedRecipeId, setSharedRecipeId] = useState<string | null>(null);
+  const [hasHydrated, setHasHydrated] = useState(false);
 
   useEffect(() => {
-    setFilters(getInitialFilters());
+    const initial = getInitialFilters();
+    setFilters(initial);
+    setHasHydrated(true);
   }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (!hasHydrated) return;
     const params = new URLSearchParams();
     if (filters.product !== ALL_OPTION) params.set("product", filters.product);
     if (filters.protein !== ALL_OPTION) params.set("protein", filters.protein);
@@ -103,7 +110,7 @@ export default function RecipesPageClient({ siteUrl }: { siteUrl: string }) {
     const next = params.toString();
     const url = next ? `${window.location.pathname}?${next}` : window.location.pathname;
     window.history.replaceState(null, "", url);
-  }, [filters]);
+  }, [filters, hasHydrated]);
 
   const filteredRecipes = useMemo(
     () =>
@@ -212,7 +219,7 @@ export default function RecipesPageClient({ siteUrl }: { siteUrl: string }) {
         </div>
       </section>
 
-      <section className="recipes-controls">
+      <section className="recipes-controls" id="filters">
         <div className="filter-group">
           <label htmlFor="product-filter">Product</label>
           <select
@@ -316,7 +323,7 @@ export default function RecipesPageClient({ siteUrl }: { siteUrl: string }) {
         </button>
       </section>
 
-      <section className="recipes-results" aria-live="polite">
+      <section className="recipes-results" id="results" aria-live="polite">
         <div className="recipes-results__header">
           <h2 className="section-title">{filteredRecipes.length} recipes</h2>
           <p className="lead">

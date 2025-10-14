@@ -112,17 +112,17 @@ export default function HomePage() {
             {
               title: "Marinade",
               description: "Brush over ribeye and shiitake before a high-heat sear for a lacquered crust and gentle caramel smoke.",
-              href: "/recipes?use=marinade"
+              href: "/recipes?use=marinade#results"
             },
             {
               title: "Finish",
               description: "Drizzle on sizzling yakitori, ramen, or crispy tofu to add a glossy, umami-rich pop right before plating.",
-              href: "/recipes?use=finish"
+              href: "/recipes?use=finishing#results"
             },
             {
               title: "Dip",
               description: "Serve alongside gyoza, fries, or karaage. Stir in chili crunch or citrus for quick customizations.",
-              href: "/recipes?use=dip"
+              href: "/recipes?use=dip#results"
             }
           ].map((item) => (
             <Link className="usage-card" key={item.title} href={item.href}>

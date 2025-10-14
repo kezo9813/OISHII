@@ -1992,11 +1992,14 @@ section {
   background: #ffffff;
   border-radius: 2.2rem;
   padding: clamp(2rem, 4vw, 3rem);
-  max-width: 420px;
-  width: min(100%, 420px);
+  max-width: 360px;
+  width: min(100%, 360px);
+  max-height: 95vh;
+  overflow-y: auto;
   display: grid;
   gap: 1.2rem;
   box-shadow: 0 32px 60px rgba(17, 17, 17, 0.22);
+  border: 1px solid rgba(17, 17, 17, 0.12);
 }
 
 .spin-modal__close {
@@ -2004,10 +2007,13 @@ section {
   top: 1.2rem;
   right: 1.4rem;
   border: none;
-  background: transparent;
-  font-size: 1.4rem;
+  background: rgba(17, 17, 17, 0.07);
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  font-size: 1.2rem;
   cursor: pointer;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .spin-wheel {
