@@ -8,11 +8,11 @@ const HIDDEN_ROUTES = [/^\/unlock/, /^\/cart/, /^\/checkout/, /^\/shop/];
 
 export function StickyShopCTA() {
   const pathname = usePathname();
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      const threshold = 120;
+      const threshold = 200;
       setIsVisible(window.scrollY > threshold);
     };
 
@@ -27,7 +27,6 @@ export function StickyShopCTA() {
   return (
     <div className={`sticky-site-cta${isVisible ? " is-visible" : ""}`} aria-label="Shop call to action">
       <div className="sticky-site-cta__inner">
-        <span>Bottling next batch in 48 hours</span>
         <Link href="/shop" className="primary-action">
           Shop Now
         </Link>

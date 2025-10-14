@@ -2,158 +2,9 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { recipes, type Recipe } from "../../data/recipes";
 
-type Recipe = {
-  id: string;
-  title: string;
-  href: string;
-  product: string;
-  protein: string;
-  mealType: string;
-  occasion: string;
-  prep: number;
-  cook: number;
-  serves: number;
-  description: string;
-  featured?: boolean;
-  uses: string[];
-  tags: string[];
-  chefTip: string;
-};
-
-const RECIPES: Recipe[] = [
-  {
-    id: "charred-short-rib",
-    title: "Charred Short Rib Lettuce Cups",
-    href: "/recipes/charred-short-rib",
-    product: "Original",
-    protein: "Beef",
-    mealType: "Dinner",
-    occasion: "Grilling",
-    prep: 15,
-    cook: 20,
-    serves: 4,
-    description: "Caramelized short ribs glossed with OIISHI, tucked into crisp lettuce, and finished with pickled scallions.",
-    featured: true,
-    uses: ["marinade", "finish"],
-    tags: ["Most Loved", "Entertaining"],
-    chefTip: "Toss your lettuce with ice water before serving for extra crunch."
-  },
-  {
-    id: "glazed-miso-eggplant",
-    title: "Glazed Miso Eggplant",
-    href: "/recipes/glazed-miso-eggplant",
-    product: "Original",
-    protein: "Vegetarian",
-    mealType: "Dinner",
-    occasion: "Meatless Monday",
-    prep: 10,
-    cook: 25,
-    serves: 2,
-    description: "Broiled eggplant brushed with miso and OIISHI for a sticky, smoky finish.",
-    featured: true,
-    uses: ["finish", "dip"],
-    tags: ["Weeknight", "Vegetarian"],
-    chefTip: "Score the flesh in a cross-hatch to help the sauce seep in."
-  },
-  {
-    id: "midnight-yaki-udon",
-    title: "Midnight Yaki Udon",
-    href: "/recipes/midnight-yaki-udon",
-    product: "Spicy",
-    protein: "Seafood",
-    mealType: "Late Night",
-    occasion: "Quick & Easy",
-    prep: 10,
-    cook: 12,
-    serves: 2,
-    description: "Chewy udon, butter-seared shrimp, and a splash of sauce for a glossy, late-night slurp.",
-    featured: true,
-    uses: ["stir-fry", "finish"],
-    tags: ["Quick", "Most Loved"],
-    chefTip: "Warm the sauce before tossing so it coats evenly without cooling the noodles."
-  },
-  {
-    id: "crispy-rice-salmon",
-    title: "Crispy Rice with Glazed Salmon",
-    href: "/recipes/crispy-rice-salmon",
-    product: "Original",
-    protein: "Seafood",
-    mealType: "Appetizer",
-    occasion: "Entertaining",
-    prep: 20,
-    cook: 18,
-    serves: 6,
-    description: "Crisped rice squares crowned with OIISHI-glazed salmon and yuzu mayo.",
-    uses: ["finish", "dip"],
-    tags: ["Entertaining"],
-    chefTip: "Brush the rice with neutral oil before pan-frying for even browning."
-  },
-  {
-    id: "karaage-sliders",
-    title: "Karaage Sliders",
-    href: "/recipes/karaage-sliders",
-    product: "Spicy",
-    protein: "Poultry",
-    mealType: "Lunch",
-    occasion: "Gameday",
-    prep: 25,
-    cook: 15,
-    serves: 8,
-    description: "Fried chicken thighs tossed in OIISHI sauce, stacked on milk bread with pickled daikon.",
-    uses: ["marinade", "dip"],
-    tags: ["Entertaining", "Most Loved"],
-    chefTip: "Double fry the chicken for extra crunch that stands up to the glaze."
-  },
-  {
-    id: "yuzu-tofu-bowls",
-    title: "Yuzu Glazed Tofu Bowls",
-    href: "/recipes/yuzu-tofu-bowls",
-    product: "Yuzu",
-    protein: "Vegetarian",
-    mealType: "Dinner",
-    occasion: "Weeknight",
-    prep: 15,
-    cook: 20,
-    serves: 3,
-    description: "Crispy tofu cubes glazed with the citrus batch, served over sesame rice and crunchy veg.",
-    uses: ["finish"],
-    tags: ["Weeknight", "Vegetarian"],
-    chefTip: "Press tofu for 10 minutes so it absorbs more sauce."
-  },
-  {
-    id: "smokehouse-burnt-ends",
-    title: "Smokehouse Burnt Ends",
-    href: "/recipes/smokehouse-burnt-ends",
-    product: "Smoked",
-    protein: "Beef",
-    mealType: "Dinner",
-    occasion: "Competition",
-    prep: 30,
-    cook: 240,
-    serves: 6,
-    description: "Low-and-slow brisket ends lacquered in sauce, finished with a final flame-kissed glaze.",
-    uses: ["marinade", "finish"],
-    tags: ["Showstopper"],
-    chefTip: "Rest the meat covered for 20 minutes so juices redistribute before saucing."
-  },
-  {
-    id: "yakitori-skewers",
-    title: "OIISHI Yakitori Skewers",
-    href: "/recipes/yakitori-skewers",
-    product: "Original",
-    protein: "Poultry",
-    mealType: "Dinner",
-    occasion: "Street Food",
-    prep: 20,
-    cook: 15,
-    serves: 4,
-    description: "Char-grilled chicken skewers repeatedly glazed for layers of sheen and smoke.",
-    uses: ["marinade", "finish"],
-    tags: ["Most Loved", "Grilling"],
-    chefTip: "Glaze during the final two turns to avoid burning the sugars."
-  }
-];
+type FilterValue = string;
 
 const ALL_OPTION = "all";
 
@@ -161,115 +12,115 @@ const toTitle = (value: string) => value.replace(/(^|\s)\w/g, (match) => match.t
 
 const optionify = (value: string) => ({ value, label: toTitle(value) });
 
-type RecipesPageClientProps = {
-  siteUrl: string;
+type FilterState = {
+  product: FilterValue;
+  protein: FilterValue;
+  meal: FilterValue;
+  occasion: FilterValue;
+  use: FilterValue;
+  pair: FilterValue;
+  tag: FilterValue;
 };
 
-export default function RecipesPageClient({ siteUrl }: RecipesPageClientProps) {
-  const [productFilter, setProductFilter] = useState(ALL_OPTION);
-  const [proteinFilter, setProteinFilter] = useState(ALL_OPTION);
-  const [mealFilter, setMealFilter] = useState(ALL_OPTION);
-  const [occasionFilter, setOccasionFilter] = useState(ALL_OPTION);
-  const [useFilter, setUseFilter] = useState(ALL_OPTION);
-  const [tagFilter, setTagFilter] = useState(ALL_OPTION);
+const DEFAULT_FILTERS: FilterState = {
+  product: ALL_OPTION,
+  protein: ALL_OPTION,
+  meal: ALL_OPTION,
+  occasion: ALL_OPTION,
+  use: ALL_OPTION,
+  pair: ALL_OPTION,
+  tag: ALL_OPTION
+};
+
+const getInitialFilters = (): FilterState => {
+  if (typeof window === "undefined") return DEFAULT_FILTERS;
+  const params = new URLSearchParams(window.location.search);
+  return {
+    product: params.get("product") ?? ALL_OPTION,
+    protein: params.get("protein") ?? ALL_OPTION,
+    meal: params.get("meal") ?? ALL_OPTION,
+    occasion: params.get("occasion") ?? ALL_OPTION,
+    use: params.get("use")?.toLowerCase() ?? ALL_OPTION,
+    pair: params.get("pair") ?? ALL_OPTION,
+    tag: params.get("tag") ?? ALL_OPTION
+  };
+};
+
+const useOptions = Array.from(new Set(recipes.flatMap((recipe) => recipe.uses))).map(optionify);
+const pairOptions = Array.from(new Set(recipes.flatMap((recipe) => recipe.pairs))).map(optionify);
+const tagOptions = Array.from(new Set(recipes.flatMap((recipe) => recipe.tags))).map((tag) => ({
+  value: tag,
+  label: tag
+}));
+
+const productOptions = Array.from(new Set(recipes.map((recipe) => recipe.product))).map((product) => ({
+  value: product,
+  label: product
+}));
+
+const proteinOptions = Array.from(new Set(recipes.map((recipe) => recipe.protein))).map((protein) => ({
+  value: protein,
+  label: protein
+}));
+
+const mealOptions = Array.from(new Set(recipes.map((recipe) => recipe.mealType))).map((meal) => ({
+  value: meal,
+  label: meal
+}));
+
+const occasionOptions = Array.from(new Set(recipes.map((recipe) => recipe.occasion))).map((occasion) => ({
+  value: occasion,
+  label: occasion
+}));
+
+function matchesFilterValue(value: FilterValue, target: string | string[] | undefined): boolean {
+  if (value === ALL_OPTION) return true;
+  if (!target) return false;
+  if (Array.isArray(target)) {
+    return target.includes(value as never);
+  }
+  return target === value;
+}
+
+export default function RecipesPageClient({ siteUrl }: { siteUrl: string }) {
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [sharedRecipeId, setSharedRecipeId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    const requestedUse = params.get("use");
-    if (requestedUse) {
-      setUseFilter(requestedUse.toLowerCase());
-    }
+    setFilters(getInitialFilters());
   }, []);
 
-  const productOptions = useMemo(
-    () => [
-      { value: ALL_OPTION, label: "All products" },
-      ...Array.from(new Set(RECIPES.map((recipe) => recipe.product))).map((product) => ({
-        value: product,
-        label: product
-      }))
-    ],
-    []
-  );
-
-  const proteinOptions = useMemo(
-    () => [
-      { value: ALL_OPTION, label: "All proteins" },
-      ...Array.from(new Set(RECIPES.map((recipe) => recipe.protein))).map((protein) => ({
-        value: protein,
-        label: protein
-      }))
-    ],
-    []
-  );
-
-  const mealOptions = useMemo(
-    () => [
-      { value: ALL_OPTION, label: "All meal types" },
-      ...Array.from(new Set(RECIPES.map((recipe) => recipe.mealType))).map((meal) => ({
-        value: meal,
-        label: meal
-      }))
-    ],
-    []
-  );
-
-  const occasionOptions = useMemo(
-    () => [
-      { value: ALL_OPTION, label: "All occasions" },
-      ...Array.from(new Set(RECIPES.map((recipe) => recipe.occasion))).map((occasion) => ({
-        value: occasion,
-        label: occasion
-      }))
-    ],
-    []
-  );
-
-  const useOptions = useMemo(
-    () => [
-      { value: ALL_OPTION, label: "All uses" },
-      ...Array.from(new Set(RECIPES.flatMap((recipe) => recipe.uses))).map(optionify)
-    ],
-    []
-  );
-
-  const tagOptions = useMemo(
-    () => [
-      { value: ALL_OPTION, label: "All highlights" },
-      ...Array.from(new Set(RECIPES.flatMap((recipe) => recipe.tags))).map((tag) => ({
-        value: tag,
-        label: tag
-      }))
-    ],
-    []
-  );
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams();
+    if (filters.product !== ALL_OPTION) params.set("product", filters.product);
+    if (filters.protein !== ALL_OPTION) params.set("protein", filters.protein);
+    if (filters.meal !== ALL_OPTION) params.set("meal", filters.meal);
+    if (filters.occasion !== ALL_OPTION) params.set("occasion", filters.occasion);
+    if (filters.use !== ALL_OPTION) params.set("use", filters.use);
+    if (filters.pair !== ALL_OPTION) params.set("pair", filters.pair);
+    if (filters.tag !== ALL_OPTION) params.set("tag", filters.tag);
+    const next = params.toString();
+    const url = next ? `${window.location.pathname}?${next}` : window.location.pathname;
+    window.history.replaceState(null, "", url);
+  }, [filters]);
 
   const filteredRecipes = useMemo(
     () =>
-      RECIPES.filter((recipe) => {
-        const matchesProduct = productFilter === ALL_OPTION || recipe.product === productFilter;
-        const matchesProtein = proteinFilter === ALL_OPTION || recipe.protein === proteinFilter;
-        const matchesMeal = mealFilter === ALL_OPTION || recipe.mealType === mealFilter;
-        const matchesOccasion = occasionFilter === ALL_OPTION || recipe.occasion === occasionFilter;
-        const matchesUse = useFilter === ALL_OPTION || recipe.uses.includes(useFilter);
-        const matchesTag = tagFilter === ALL_OPTION || recipe.tags.includes(tagFilter);
-        return matchesProduct && matchesProtein && matchesMeal && matchesOccasion && matchesUse && matchesTag;
+      recipes.filter((recipe) => {
+        const matchesProduct = matchesFilterValue(filters.product, recipe.product);
+        const matchesProtein = matchesFilterValue(filters.protein, recipe.protein);
+        const matchesMeal = matchesFilterValue(filters.meal, recipe.mealType);
+        const matchesOccasion = matchesFilterValue(filters.occasion, recipe.occasion);
+        const matchesUse = matchesFilterValue(filters.use, recipe.uses);
+        const matchesPair = matchesFilterValue(filters.pair, recipe.pairs);
+        const matchesTag = matchesFilterValue(filters.tag, recipe.tags);
+        return matchesProduct && matchesProtein && matchesMeal && matchesOccasion && matchesUse && matchesPair && matchesTag;
       }),
-    [productFilter, proteinFilter, mealFilter, occasionFilter, useFilter, tagFilter]
+    [filters]
   );
 
-  const featured = useMemo(() => RECIPES.filter((recipe) => recipe.featured), []);
-
-  const resetFilters = () => {
-    setProductFilter(ALL_OPTION);
-    setProteinFilter(ALL_OPTION);
-    setMealFilter(ALL_OPTION);
-    setOccasionFilter(ALL_OPTION);
-    setUseFilter(ALL_OPTION);
-    setTagFilter(ALL_OPTION);
-  };
+  const featured = useMemo(() => recipes.filter((recipe) => recipe.featured), []);
 
   const handleShare = useCallback(async (recipe: Recipe) => {
     const origin = typeof window !== "undefined" ? window.location.origin : "";
@@ -290,14 +141,14 @@ export default function RecipesPageClient({ siteUrl }: RecipesPageClientProps) {
 
   const handlePrint = useCallback((recipe: Recipe) => {
     if (typeof window === "undefined") return;
-    window.open(recipe.href, "_blank");
+    window.open(`${recipe.href}?print=1`, "_blank");
   }, []);
 
   const structuredData = useMemo(
     () =>
       JSON.stringify({
         "@context": "https://schema.org",
-        "@graph": RECIPES.map((recipe) => ({
+        "@graph": recipes.map((recipe) => ({
           "@type": "Recipe",
           name: recipe.title,
           description: recipe.description,
@@ -319,6 +170,8 @@ export default function RecipesPageClient({ siteUrl }: RecipesPageClientProps) {
     [siteUrl]
   );
 
+  const resetFilters = () => setFilters(DEFAULT_FILTERS);
+
   return (
     <>
       <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: structuredData }} />
@@ -326,7 +179,7 @@ export default function RecipesPageClient({ siteUrl }: RecipesPageClientProps) {
         <p className="section-heading">Recipes</p>
         <h1 className="section-title">Find your next glossy obsession</h1>
         <p className="lead">
-          Filter by product, protein, meal type, occasion, and usage to surface recipes tailored to your cook and your crowd.
+          Filter by product, protein, meal type, occasion, usage, and pairing to surface recipes tailored to your cook and your crowd.
           Every dish is built around OIISHI&apos;s smoky-sweet glaze.
         </p>
       </section>
@@ -364,10 +217,10 @@ export default function RecipesPageClient({ siteUrl }: RecipesPageClientProps) {
           <label htmlFor="product-filter">Product</label>
           <select
             id="product-filter"
-            value={productFilter}
-            onChange={(event) => setProductFilter(event.target.value)}
+            value={filters.product}
+            onChange={(event) => setFilters((prev) => ({ ...prev, product: event.target.value }))}
           >
-            {productOptions.map((option) => (
+            {[{ value: ALL_OPTION, label: "All products" }, ...productOptions].map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -378,10 +231,10 @@ export default function RecipesPageClient({ siteUrl }: RecipesPageClientProps) {
           <label htmlFor="protein-filter">Protein</label>
           <select
             id="protein-filter"
-            value={proteinFilter}
-            onChange={(event) => setProteinFilter(event.target.value)}
+            value={filters.protein}
+            onChange={(event) => setFilters((prev) => ({ ...prev, protein: event.target.value }))}
           >
-            {proteinOptions.map((option) => (
+            {[{ value: ALL_OPTION, label: "All proteins" }, ...proteinOptions].map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -390,8 +243,12 @@ export default function RecipesPageClient({ siteUrl }: RecipesPageClientProps) {
         </div>
         <div className="filter-group">
           <label htmlFor="meal-filter">Meal Type</label>
-          <select id="meal-filter" value={mealFilter} onChange={(event) => setMealFilter(event.target.value)}>
-            {mealOptions.map((option) => (
+          <select
+            id="meal-filter"
+            value={filters.meal}
+            onChange={(event) => setFilters((prev) => ({ ...prev, meal: event.target.value }))}
+          >
+            {[{ value: ALL_OPTION, label: "All meal types" }, ...mealOptions].map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -402,10 +259,10 @@ export default function RecipesPageClient({ siteUrl }: RecipesPageClientProps) {
           <label htmlFor="occasion-filter">Occasion</label>
           <select
             id="occasion-filter"
-            value={occasionFilter}
-            onChange={(event) => setOccasionFilter(event.target.value)}
+            value={filters.occasion}
+            onChange={(event) => setFilters((prev) => ({ ...prev, occasion: event.target.value }))}
           >
-            {occasionOptions.map((option) => (
+            {[{ value: ALL_OPTION, label: "All occasions" }, ...occasionOptions].map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -414,8 +271,26 @@ export default function RecipesPageClient({ siteUrl }: RecipesPageClientProps) {
         </div>
         <div className="filter-group">
           <label htmlFor="use-filter">Usage</label>
-          <select id="use-filter" value={useFilter} onChange={(event) => setUseFilter(event.target.value)}>
-            {useOptions.map((option) => (
+          <select
+            id="use-filter"
+            value={filters.use}
+            onChange={(event) => setFilters((prev) => ({ ...prev, use: event.target.value }))}
+          >
+            {[{ value: ALL_OPTION, label: "All uses" }, ...useOptions].map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="filter-group">
+          <label htmlFor="pair-filter">Pairing</label>
+          <select
+            id="pair-filter"
+            value={filters.pair}
+            onChange={(event) => setFilters((prev) => ({ ...prev, pair: event.target.value }))}
+          >
+            {[{ value: ALL_OPTION, label: "All pairings" }, ...pairOptions].map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -424,8 +299,12 @@ export default function RecipesPageClient({ siteUrl }: RecipesPageClientProps) {
         </div>
         <div className="filter-group">
           <label htmlFor="tag-filter">Highlight</label>
-          <select id="tag-filter" value={tagFilter} onChange={(event) => setTagFilter(event.target.value)}>
-            {tagOptions.map((option) => (
+          <select
+            id="tag-filter"
+            value={filters.tag}
+            onChange={(event) => setFilters((prev) => ({ ...prev, tag: event.target.value }))}
+          >
+            {[{ value: ALL_OPTION, label: "All highlights" }, ...tagOptions].map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -465,7 +344,7 @@ export default function RecipesPageClient({ siteUrl }: RecipesPageClientProps) {
                     Prep {recipe.prep}m · Cook {recipe.cook}m · Serves {recipe.serves}
                   </span>
                 </div>
-                <p className="recipes-grid__tip">Chef tip: {recipe.chefTip}</p>
+                {recipe.chefTips ? <p className="recipes-grid__tip">Chef tip: {recipe.chefTips}</p> : null}
                 <div className="recipes-grid__actions">
                   <button type="button" className="ghost-button" onClick={() => handleShare(recipe)}>
                     Share

@@ -102,7 +102,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="about-ingredients">
+      <section className="about-ingredients" id="ingredients">
         <div className="about-ingredients__intro">
           <h2 className="section-title">Seven ingredients. Zero shortcuts.</h2>
           <p className="lead">No gums, no corn syrup, no preservatives. Just whole ingredients treated with precision.</p>

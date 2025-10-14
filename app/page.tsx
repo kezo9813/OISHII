@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { UrgencyNotice } from "../components/UrgencyNotice";
+import { product } from "../data/product";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://oishii.site";
 
@@ -34,6 +36,8 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
+  const { inventoryCount, nextBatchDate } = product;
+
   return (
     <>
       <section className="hero hero-home">
@@ -47,14 +51,13 @@ export default function HomePage() {
             <Link href="/shop" className="primary-action">
               Shop Now
             </Link>
-            <Link href="#why-oishii" className="secondary-link hero-secondary">
+            <Link href="#why" className="secondary-link hero-secondary">
               Why it hits different →
             </Link>
           </div>
           <div className="hero-badges" aria-label="Product accolades">
             <span>Batch No. 07 · Brewed weekly</span>
             <span>★ 4.9 (2,680 reviews)</span>
-            <span>Only 127 bottles left in this drop</span>
           </div>
         </div>
         <div className="hero-visual hero-visual--image">
@@ -69,7 +72,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="home-highlights" id="why-oishii">
+      <UrgencyNotice inventoryCount={inventoryCount} nextBatchDate={nextBatchDate} />
+
+      <div className="home-bridge" aria-label="Quick actions">
+        <Link href="#why" className="primary-action primary-action--outline">
+          Why It Hits Different
+        </Link>
+        <Link href="/about#ingredients" className="primary-action primary-action--outline">
+          What&apos;s Inside
+        </Link>
+      </div>
+
+      <section className="home-highlights" id="why">
         <div className="grid">
           <div className="headline-block">
             <p className="section-heading">Why it hits different</p>
@@ -77,8 +91,8 @@ export default function HomePage() {
             <p className="lead">
               We cold-age tamari, mirin, and charred garlic before finishing with yuzu zest for an edge that plays well with smoky grills and late-night noodles.
             </p>
-            <Link href="/about" className="primary-action primary-action--outline">
-              What&apos;s inside
+            <Link href="/about#ingredients" className="secondary-link">
+              Explore ingredients →
             </Link>
           </div>
           <ul className="highlight-list">
@@ -120,26 +134,6 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
-      </section>
-
-      <section className="home-midcta">
-        {[{
-          title: "What makes OIISHI obsessive",
-          copy: "Cold-aged tamari, toasted sesame oil, and yuzu flash—decoded for the curious eater.",
-          href: "/about"
-        }, {
-          title: "Meet the next batch",
-          copy: "Peek behind the bottling line, see the schedule, and reserve your allocation before it sells out.",
-          href: "/shop"
-        }].map((card) => (
-          <article key={card.title} className="midcta-card">
-            <h3>{card.title}</h3>
-            <p>{card.copy}</p>
-            <Link href={card.href} className="secondary-link">
-              Learn more →
-            </Link>
-          </article>
-        ))}
       </section>
 
       <section className="recipes-preview">

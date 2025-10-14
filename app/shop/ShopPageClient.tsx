@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { product, type ProductBadge, type ProductPair } from "../../data/product";
 
 const PACK_OPTIONS = [
   {
@@ -37,50 +38,41 @@ const FREQUENCIES = [
   { value: "90", label: "Every 3 months" }
 ] as const;
 
-const INGREDIENTS = [
-  { name: "Cold-aged tamari", note: "Fermented for 21 days for velvet umami." },
-  { name: "Toasted sesame oil", note: "Adds warmth and a lingering aroma." },
-  { name: "Black garlic", note: "Slow-roasted for caramel depth." },
-  { name: "Yuzu zest", note: "Finishing flash for bright acidity." },
-  { name: "Mirin", note: "Natural sweetness—no syrups, no gums." },
-  { name: "Rice vinegar", note: "Balances fat and smoke." },
-  { name: "Sea salt", note: "Final seasoning for gloss and snap." }
-];
+const BADGE_LABELS: Record<ProductBadge, string> = {
+  vegan: "Vegan",
+  "no-preservatives": "No Preservatives",
+  "7-ingredients": "7 Ingredients",
+  "gluten-free": "Gluten Free",
+  "small-batch": "Small Batch"
+};
 
-const BADGES = [
-  "Vegan",
-  "No Preservatives",
-  "No Gums",
-  "Seven Ingredients",
-  "Small Batch"
-];
-
-const PAIRINGS = [
-  { title: "Yakitori", copy: "Brush during the last minute over skewered chicken thighs.", href: "/recipes/oishii-yakitori" },
-  { title: "Crispy Gyoza", copy: "Serve as a dipping sauce with a splash of rice vinegar.", href: "/recipes/crispy-gyoza" },
-  { title: "Charred Napa Cabbage", copy: "Caramelize the edges then finish with toasted sesame seeds.", href: "/recipes/charred-napa" }
-];
-
-const CUSTOMER_PHOTOS = [
-  { id: 1, caption: "@grillandglaze", description: "Table-side pour over sizzling ribeye." },
-  { id: 2, caption: "@midnightnoodles", description: "Midnight yaki udon meets soft egg." },
-  { id: 3, caption: "@plantbasedhiro", description: "Glazed king oyster mushrooms ready to serve." }
-];
-
-const UPSELLS = [
-  {
-    title: "Limited canvas tote",
-    description: "Carry your bottles in a heavyweight canvas tote with gloss-black print.",
-    price: "$18",
-    href: "/shop/tote"
+const PAIR_COPY: Partial<Record<ProductPair, { title: string; copy: string; href: string }>> = {
+  yakitori: {
+    title: "Yakitori",
+    copy: "Brush skewers in thin layers for lacquered shine.",
+    href: "/recipes?pair=yakitori"
   },
-  {
-    title: "Smoked Chili Drop",
-    description: "Add a limited 6 oz bottle of smoked chili tare for layered heat.",
-    price: "$14",
-    href: "/shop/smoked-chili"
+  gyoza: {
+    title: "Gyoza",
+    copy: "Serve as a dipping sauce with a flash of rice vinegar.",
+    href: "/recipes?pair=gyoza"
+  },
+  noodles: {
+    title: "Noodles",
+    copy: "Finish udon or ramen with a spoonful for instant gloss.",
+    href: "/recipes?pair=noodles"
+  },
+  grilling: {
+    title: "Open-fire Grilling",
+    copy: "Glaze steaks or vegetables over live flame for caramel edges.",
+    href: "/recipes?pair=grilling"
+  },
+  snacks: {
+    title: "Snacks",
+    copy: "Drizzle over crispy rice bites, fries, or karaage.",
+    href: "/recipes?pair=snacks"
   }
-];
+};
 
 const REVIEWS = [
   {
@@ -109,6 +101,33 @@ const REVIEWS = [
     body:
       "The subscription keeps me stocked without thinking about reorders. I go through bottles fast because every friend asks for a taste.",
     date: "March 2024"
+  }
+];
+
+const FEATURED_RECIPES = [
+  {
+    title: "Charred Short Rib Lettuce Cups",
+    tag: "Most Loved",
+    href: "/recipes/charred-short-rib",
+    time: "Cook 20 min"
+  },
+  {
+    title: "Glazed Miso Eggplant",
+    tag: "Vegetarian",
+    href: "/recipes/glazed-miso-eggplant",
+    time: "Cook 25 min"
+  },
+  {
+    title: "Midnight Yaki Udon",
+    tag: "Quick",
+    href: "/recipes/midnight-yaki-udon",
+    time: "Cook 12 min"
+  },
+  {
+    title: "Crispy Rice with Salmon",
+    tag: "Entertaining",
+    href: "/recipes/crispy-rice-salmon",
+    time: "Cook 18 min"
   }
 ];
 
@@ -162,11 +181,10 @@ export default function ShopPageClient({ siteUrl }: ShopPageClientProps) {
       JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Product",
-        name: "OIISHI Limited Batch Original Sauce",
-        description:
-          "Small batch Japanese barbecue sauce crafted with seven ingredients for high-gloss grilling and finishing.",
-        image: [`${siteUrl}/images/hero-steak.jpg`],
-        sku: "OIISHI-OG-260",
+        name: product.name,
+        description: product.description,
+        image: [`${siteUrl}${product.heroImage}`],
+        sku: product.sku,
         brand: {
           "@type": "Brand",
           name: "OIISHI"
@@ -194,19 +212,17 @@ export default function ShopPageClient({ siteUrl }: ShopPageClientProps) {
       <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: productSchema }} />
       <section className="product-hero">
         <div className="product-viewer">
-          <div className="product-visual" role="img" aria-label="OIISHI sauce bottle glazing short ribs">
+          <div className="product-visual" role="img" aria-label={`${product.name} hero`}>
             <Image
-              src="/images/hero-steak.jpg"
-              alt="OIISHI sauce bottle glazing short ribs"
+              src={product.heroImage}
+              alt={`${product.name} hero visual`}
               fill
               priority
               sizes="(min-width: 1024px) 520px, (min-width: 768px) 60vw, 90vw"
               className="product-visual__image"
             />
           </div>
-          <div className="product-visual__note">
-            Hover to inspect the finish and packaging details. Interactive 360° coming soon.
-          </div>
+          <div className="product-visual__note">Hover to inspect the finish and packaging details.</div>
         </div>
         <aside className="product-summary" aria-labelledby="product-title">
           <p className="section-heading">OIISHI Japanese Barbecue Sauce</p>
@@ -219,12 +235,10 @@ export default function ShopPageClient({ siteUrl }: ShopPageClientProps) {
               4.9 out of 5 stars <span className="product-rating__meta">(2,680+ reviews)</span>
             </span>
           </div>
-          <p className="product-subtitle">
-            Smoky-sweet lacquer built for yakiniku nights, midnight noodles, and every crispy bite between.
-          </p>
+          <p className="product-subtitle">{product.description}</p>
           <ul className="product-badges" aria-label="Product attributes">
-            {BADGES.map((badge) => (
-              <li key={badge}>{badge}</li>
+            {product.badges.map((badge) => (
+              <li key={badge}>{BADGE_LABELS[badge]}</li>
             ))}
           </ul>
 
@@ -298,8 +312,9 @@ export default function ShopPageClient({ siteUrl }: ShopPageClientProps) {
                 </select>
                 <ul className="subscription-perks">
                   <li>✔ Save {savingsLabel} on every drop</li>
-                  <li>✔ Free shipping on subscription orders</li>
-                  <li>✔ Pause or cancel anytime</li>
+                  {product.subscribeBenefits.map((benefit) => (
+                    <li key={benefit}>✔ {benefit}</li>
+                  ))}
                 </ul>
               </div>
             ) : null}
@@ -316,7 +331,7 @@ export default function ShopPageClient({ siteUrl }: ShopPageClientProps) {
           </div>
         </aside>
       </section>
-      {/* Remaining sections unchanged from previous implementation */}
+
       <section className="product-info">
         <div>
           <h2 className="section-title">Built for obsessive glazing</h2>
@@ -346,10 +361,10 @@ export default function ShopPageClient({ siteUrl }: ShopPageClientProps) {
           <p className="lead">Seven ingredients, nothing to hide. Every bottle is brewed, rested, and bottled in small batches.</p>
         </div>
         <ul className="ingredients-list">
-          {INGREDIENTS.map((ingredient) => (
-            <li key={ingredient.name}>
-              <span className="ingredient-name">{ingredient.name}</span>
-              <span className="ingredient-note">{ingredient.note}</span>
+          {product.ingredients.map((ingredient) => (
+            <li key={ingredient}>
+              <span className="ingredient-name">{ingredient}</span>
+              <span className="ingredient-note">Transparent sourcing. No fillers. TODO: replace with CMS notes.</span>
             </li>
           ))}
         </ul>
@@ -358,15 +373,19 @@ export default function ShopPageClient({ siteUrl }: ShopPageClientProps) {
       <section className="product-pairings" aria-label="Pairs well with">
         <h2 className="section-title">Pairs well with</h2>
         <div className="pairings-grid">
-          {PAIRINGS.map((pairing) => (
-            <article key={pairing.title} className="pairing-card">
-              <h3>{pairing.title}</h3>
-              <p>{pairing.copy}</p>
-              <Link href={pairing.href} className="subtle-link">
-                See recipe →
-              </Link>
-            </article>
-          ))}
+          {product.pairs.map((pair) => {
+            const pairing = PAIR_COPY[pair];
+            if (!pairing) return null;
+            return (
+              <article key={pairing.title} className="pairing-card">
+                <h3>{pairing.title}</h3>
+                <p>{pairing.copy}</p>
+                <Link href={pairing.href} className="subtle-link">
+                  See recipes →
+                </Link>
+              </article>
+            );
+          })}
         </div>
       </section>
 
@@ -379,27 +398,7 @@ export default function ShopPageClient({ siteUrl }: ShopPageClientProps) {
           </p>
         </div>
         <div className="recipes-carousel" role="list">
-          {[{
-            title: "Charred Short Rib Lettuce Cups",
-            tag: "Most Loved",
-            href: "/recipes/charred-short-rib",
-            time: "Cook 20 min"
-          }, {
-            title: "Glazed Miso Eggplant",
-            tag: "Vegetarian",
-            href: "/recipes/glazed-miso-eggplant",
-            time: "Cook 25 min"
-          }, {
-            title: "Midnight Yaki Udon",
-            tag: "Quick",
-            href: "/recipes/midnight-yaki-udon",
-            time: "Cook 12 min"
-          }, {
-            title: "Crispy Rice with Salmon",
-            tag: "Entertaining",
-            href: "/recipes/crispy-rice-salmon",
-            time: "Cook 18 min"
-          }].map((recipe) => (
+          {FEATURED_RECIPES.map((recipe) => (
             <article key={recipe.title} className="carousel-card" role="listitem">
               <div className="carousel-card__media" aria-hidden="true" />
               <span className="carousel-card__tag">{recipe.tag}</span>
@@ -468,12 +467,12 @@ export default function ShopPageClient({ siteUrl }: ShopPageClientProps) {
           <h2 className="section-title">From the community</h2>
           <p className="lead">Real pours, night markets, and home grills sharing the gloss.</p>
         </div>
-        <div className="community-grid">
-          {CUSTOMER_PHOTOS.map((entry) => (
-            <article key={entry.id} className="community-card">
+        <div className="community-carousel" role="list">
+          {product.testimonials.map((entry) => (
+            <article key={entry.id} className="community-card" role="listitem">
               <div className="community-media" aria-hidden="true" />
-              <span className="community-caption">{entry.caption}</span>
-              <p>{entry.description}</p>
+              <p className="community-quote">“{entry.quote}”</p>
+              <span className="community-caption">{entry.handle}</span>
             </article>
           ))}
         </div>
@@ -482,15 +481,15 @@ export default function ShopPageClient({ siteUrl }: ShopPageClientProps) {
       <section className="product-upsells">
         <h2 className="section-title">Complete the ritual</h2>
         <div className="upsell-grid">
-          {UPSELLS.map((item) => (
+          {product.upsells.map((item) => (
             <article key={item.title} className="upsell-card">
               <h3>{item.title}</h3>
               <p>{item.description}</p>
               <div className="upsell-footer">
                 <span>{item.price}</span>
-                <Link href={item.href} className="secondary-link">
-                  Add to bundle →
-                </Link>
+                <button type="button" className="primary-action primary-action--outline" aria-label={`Add ${item.title} to cart`}>
+                  Add to cart
+                </button>
               </div>
             </article>
           ))}
